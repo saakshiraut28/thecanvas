@@ -1,9 +1,9 @@
-console.log("Hello there");
 
 let url;
 const canvas = new fabric.Canvas("canvas",{
     width: 500,
     height: 500,
+    backgroundColor: '#fff'
 });
 
 canvas.requestRenderAll();
@@ -19,16 +19,18 @@ convertUrl = (e) => {
     reader.addEventListener("load",()=>{
         fabric.Image.fromURL(reader.result, img =>{
             canvas.add(img);
-            canvas.on('mouse:wheel', function(opt) {
-                var delta = opt.e.deltaY;
+            
+            canvas.on('mouse:wheel', function(img) {
+                var delta = img.e.deltaX;
                 var zoom = canvas.getZoom();
                 zoom *= 0.999 ** delta;
-                if (zoom > 50) zoom = 50;
+                if (zoom > 20) zoom = 20;
                 if (zoom < 1) zoom = 1;
-                canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-                opt.e.preventDefault();
-                opt.e.stopPropagation();
+                canvas.zoomToPoint({ x: img.e.offsetX, y: img.e.offsetY }, zoom);
+                img.e.preventDefault();
+                img.e.stopPropagation();
               });
+        
             canvas.requestRenderAll();
         })
     })

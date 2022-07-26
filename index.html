@@ -18,9 +18,61 @@
         <div class="img py-2 ">
             <input id="imgUp" type="file" accept="images/*" class="py-1"/>
         </div>
+        
         <canvas id="canvas" class="absolute top-0"></canvas>
         
     </div>
-    <script src="index.js"></script>
+    <script src="wheelzoom.js"></script>
+    <script>
+                
+        let url;
+        const canvas = new fabric.Canvas("canvas",{
+            width: 500,
+            height: 500,
+            backgroundColor: '#fff'
+        });
+
+        canvas.requestRenderAll();
+
+
+        convertUrl = (e) => {
+            console.log(e);
+            const inputfile = document.getElementById("imgUp");
+            const file = inputfile.files[0];
+
+            reader.readAsDataURL(file);
+            
+            reader.addEventListener("load",()=>{
+                fabric.Image.fromURL(reader.result, img =>{
+                    img.scaleToWidth(500);
+                    img.scaleToHeight(500);
+                    canvas.backgroundImage = img;
+                    canvas.requestRenderAll();
+                })
+            })
+            
+        }
+        
+        canvas.on('mouse:wheel', function(img) {
+                        var delta = img.e.deltaX;
+                        var zoom = canvas.getZoom();
+                        zoom *= 0.999 ** delta;
+                        if (zoom > 5) {
+                            zoom = 5;
+                            
+                        };
+                        if (zoom < 1) zoom = 1;
+                        canvas.zoomToPoint({ x: img.e.offsetX, y: img.e.offsetY }, zoom);
+                        img.e.preventDefault();
+                        img.e.stopImmediatePropagation();
+                    });
+
+        const reader = new FileReader();
+
+        const imgUp = document.getElementById("imgUp");
+        imgUp.addEventListener("change", convertUrl);
+        
+    </script>
+
 </body>
 </html>
